@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # deps check
-dependencies=("akory" "xxd" "jq" "git" "xclip" "corkscrew" "gedit")
+dependencies=("akory" "xxd" "jq" "git" "xclip" "corkscrew" "gedit" "bat")
 for dep in "${dependencies[@]}"; do
     if ! command -v "$dep" > /dev/null 2>&1; then
-        echo "error: '$dep' is not installed !"
+        echo "error: '$dep' is not installed ! ___ 😢"
         exit 1
     fi
 done
