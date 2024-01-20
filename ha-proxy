@@ -6,7 +6,7 @@ source .ha_env
 # global
 author="Raja Rakotonirina <raja.rakoto7@gmail.com>"
 description="Streamlines the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode and SSH. 🖧"
-version="1.0.0"
+version="v1.0.0"
 
 # files
 ha_vscode="$HA_VSCODE"
@@ -148,15 +148,16 @@ function ha_ssh() {
 
 function ha_info() {
     akory -d 0.002 "
-	* author: $author
-	* description: $description
-	* version: $version
+* Author: $author
+* Description: $description
+* Version: $version
     "
 }
 
 function ha_help() {
     echo -e "
-Usage: ha-proxy [OPTIONS]
+* Version: $version
+* Usage: ha-proxy [OPTIONS]
 
 Options:
 --start           Start automatic proxy configuration for HTTP, Git, VSCode, and SSH.
@@ -211,37 +212,24 @@ function ex_urlencode() {
     done
 }
 
-# [args] =================================
-
-function arg-start() {ex_banner && ha_start}
-function arg-stop() {ex_banner && ha_stop}
-function arg-status() {ex_banner && ha_status}
-function arg-restart() {ex_banner && ha_stop && ha_start}
-function arg-clip() {ex_banner && ha_clip}
-function arg-check() {ex_banner && ha_check}
-function arg-env() {ex_banner && ha_env}
-function arg-ssh() {ex_banner && ha_ssh}
-function arg-version() {ex_banner && ha_info}
-function arg-help() {ex_banner && ha_help}
-
 # [main] =================================
 
 function main() {
     ha_check
     case "$1" in
-        --start) arg-start ;;
-        --stop) arg-stop ;;
-        --status) arg-status ;;
-        --restart) arg-restart ;;
-        --clip) arg-clip ;;
-        --check) arg-check ;;
-        --env) arg-env ;;
-        --ssh) arg-ssh ;;
-        --version|-v) arg-version ;;
-        --help|-h) arg-help ;;
+        --start) ex_banner && ha_start ;;
+        --stop) ex_banner && ha_stop ;;
+        --status) ex_banner && ha_status ;;
+        --restart) ex_banner && ha_stop && ha_start ;;
+        --clip) ex_banner && ha_clip ;;
+        --check) ex_banner && ha_check ;;
+        --env) ex_banner && ha_env ;;
+        --ssh) ex_banner && ha_ssh ;;
+        --version|-v) ex_banner && ha_info ;;
+        --help|-h) ex_banner && ha_help ;;
         *)
-            akory -d 0.02 "error: invalid option for ha-proxy !"
-            arg-help
+            akory -d 0.02 "missing or invalid option for ha-proxy !"
+            ex_banner && ha_help
             exit 1
         ;;
     esac
