@@ -34,6 +34,10 @@ function ha_start() {
         akory -d 0.02  "error: port numbers must be valid integers ! ___ 😢"
         exit 1
     fi
+    if ! ex_isip "$ha_proxy"; then
+        akory -d 0.02 "error: proxy is invalid ! ___ 😢"
+        exit 1
+    fi
     
     # vscode
     jq -s ".[0] + {\"http.proxy\": \"http://"$ha_username":"$ha_encoded_password"@"$ha_proxy":"$ha_port"\", \"http.proxyKerberosServicePrincipal\": \"http://"$ha_username":"$ha_encoded_password"@"$ha_proxy":"$ha_port"\"}" "$ha_vscode" > temp && mv temp "$ha_vscode"
@@ -58,7 +62,12 @@ ProxyCommand /usr/bin/corkscrew "$ha_proxy" "$ha_port" %h %p "$ha_sshauth"
     ex_access
     
     # clear
-    ha_encoded_password="password"
+    unset ha_proxy
+    unset ha_port
+    unset ha_ssh_port
+    unset ha_username
+    unset ha_password
+    unset ha_encoded_password
 }
 
 function ha_stop() {
@@ -141,11 +150,10 @@ function ha_check() {
 }
 
 function ha_env() {
-    local env_file="$ha_env"
-    if [ -e "$env_file" ]; then
-        gedit "$env_file"
+    if [ -e "$ha_env" ]; then
+        gedit "$ha_env"
     else
-        akory -d 0.02 "error: $env_file not found ! ___ 😢"
+        akory -d 0.02 "error: $ha_env not found ! ___ 😢"
     fi
 }
 
@@ -248,6 +256,16 @@ function ex_urlencode() {
             ;;
         esac
     done
+}
+
+function ex_isip() {
+    local ip=$1
+    local ip_regex='^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    if [[ $ip =~ $ip_regex ]]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 # [main] =================================
