@@ -85,4 +85,4 @@ ha-proxy --help # or -h
 ## 📌 Notes
 
 - Make sure to set the required environment variables in the `$HOME/.ha_env` file.
-- Ensure that the necessary dependencies `akory`, `xxd`, `jq`, `git`, `xclip`, `corkscrew`, `gedit` are installed.
+- Ensure that the necessary dependencies `akory`, `xxd`, `jq`, `git`, `xclip`, `corkscrew`, `gedit` and `bat` are installed.
