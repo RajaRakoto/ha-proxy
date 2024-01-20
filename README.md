@@ -20,70 +20,61 @@ curl https://raw.githubusercontent.com/RajaRakoto/ha-proxy/master/setup > setup 
 
 ## 📌 Features
 
-**📜 Start proxy configuration**
-Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
+**📜 Start proxy configuration**: Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
 
 ```bash
 ha-proxy --start
 ```
 
-**📜 Stop Proxy configuration**
-Unsets all proxy configurations.
+**📜 Stop Proxy configuration**: Unsets all proxy configurations.
 
 ```bash
 ha-proxy --stop
 ```
 
-**📜 Check current proxy status**
-Displays the current status of proxy configurations.
+**📜 Check current proxy status**: Displays the current status of proxy configurations.
 
 ```bash
 ha-proxy --status
 ```
 
-**📜 Restart proxy configuration**
-Restarts proxy configuration by stopping and then starting it.
+**📜 Restart proxy configuration**: Restarts proxy configuration by stopping and then starting it.
 
 ```bash
 ha-proxy --restart
 ```
 
-**📜 Copy proxy information**
-Copies proxy server information to the clipboard.
+**📜 Copy proxy information**: Copies proxy server information to the clipboard.
 
 ```bash
 ha-proxy --clip
 ```
 
-**📜 Check script**
-Checks for required variables and dependencies.
+**📜 Check script**: Checks for required variables and dependencies.
 
 ```bash
 ha-proxy --check
 ```
 
-**📜 Set env variables**
-Sets environment variables using a text editor.
+**📜 Set env variables**: Sets environment variables using a text editor.
 
 ```bash
 ha-proxy --env
 ```
 
-**📜 Generate new SSH key**
-Generates a new SSH (private|public) key.
+**📜 Generate new SSH key**: Generates a new SSH (private|public) key.
 
 ```bash
 ha-proxy --ssh
 ```
 
-**📜 Display script version**
+**📜 Display script version**: Display current version of ha-proxy
 
 ```bash
 ha-proxy --version
 ```
 
-**📜 Display Help Message**
-Displays a help message with usage examples.
+**📜 Display Help Message**: Displays a help message with usage examples.
 
 ```bash
 ha-proxy --help
