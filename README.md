@@ -20,85 +20,74 @@ curl https://raw.githubusercontent.com/RajaRakoto/ha-proxy/master/setup > setup 
 
 ## 📌 Features
 
-### 📜 Start Proxy Configuration
+**📜 Start proxy configuration**
+Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
 
 ```bash
 ha-proxy --start
 ```
 
-Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
-
-### 📜 Stop Proxy Configuration
+**📜 Stop Proxy configuration**
+Unsets all proxy configurations.
 
 ```bash
 ha-proxy --stop
 ```
 
-Unsets all proxy configurations.
-
-### 📜 Check Current Proxy Status
+**📜 Check current proxy status**
+Displays the current status of proxy configurations.
 
 ```bash
 ha-proxy --status
 ```
 
-Displays the current status of proxy configurations.
-
-### 📜 Restart Proxy Configuration
+**📜 Restart proxy configuration**
+Restarts proxy configuration by stopping and then starting it.
 
 ```bash
 ha-proxy --restart
 ```
 
-Restarts proxy configuration by stopping and then starting it.
-
-### 📜 Copy Proxy Information to Clipboard
+**📜 Copy proxy information**
+Copies proxy server information to the clipboard.
 
 ```bash
 ha-proxy --clip
 ```
 
-Copies proxy server information to the clipboard.
-
-### 📜 Check for Required Variables and Dependencies
+**📜 Check script**
+Checks for required variables and dependencies.
 
 ```bash
 ha-proxy --check
 ```
 
-Checks for required variables and dependencies.
-
-### 📜 Set Environment Variables
+**📜 Set env variables**
+Sets environment variables using a text editor.
 
 ```bash
 ha-proxy --env
 ```
 
-Sets environment variables using a text editor.
-
-### 📜 Generate New SSH Key
+**📜 Generate new SSH key**
+Generates a new SSH (private|public) key.
 
 ```bash
 ha-proxy --ssh
 ```
 
-Generates a new SSH (private|public) key.
-
-### 📜 Display Script Version Information
+**📜 Display script version**
 
 ```bash
 ha-proxy --version
 ```
 
-Displays script version information.
-
-### 📜 Display Help Message
+**📜 Display Help Message**
+Displays a help message with usage examples.
 
 ```bash
 ha-proxy --help
 ```
-
-Displays a help message with usage examples.
 
 ---
 
