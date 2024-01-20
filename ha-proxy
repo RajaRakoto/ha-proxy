@@ -1,0 +1,250 @@
+#!/bin/bash
+
+# source "$HOME/.ha_env"
+source .ha_env
+
+# global
+author="Raja Rakotonirina <raja.rakoto7@gmail.com>"
+description="Streamlines the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode and SSH. 🖧"
+version="1.0.0"
+
+# files
+ha_vscode="$HA_VSCODE"
+ha_gitconfig="$HA_GITCONFIG"
+ha_sshauth="$HA_SSHAUTH"
+ha_sshconfig="$HA_SSHCONFIG"
+ha_env="$HA_ENV"
+
+# [features] ============================
+
+function ha_start() {
+    # define
+    local ha_proxy="$HA_PROXY"
+    local ha_port="$HA_PORT"
+    local ha_ssh_port="$HA_SSH_PORT"
+    local ha_username="$HA_USERNAME"
+    local ha_password="$HA_PASSWORD"
+    # todo - secure encoded password
+    local ha_encoded_password=$(ex_urlencode "$ha_password")
+    
+    # check
+    if [ -z "$ha_proxy" ] || [ -z "$ha_port" ] || [ -z "$ha_ssh_port" ] || [ -z "$ha_username" ] || [ -z "$ha_password" ] || [ -z "$ha_encoded_password" ]; then
+        akory -d 0.02 "error: some required variables are not set !"
+        exit 1
+    fi
+    if ! [[ "$ha_port" =~ ^[0-9]+$ ]] || ! [[ $ha_ssh_port =~ ^[0-9]+$ ]]; then
+        akory -d 0.02  "error: port numbers must be valid integers !"
+        exit 1
+    fi
+    
+    # vscode
+    jq -s ".[0] + {\"http.proxy\": \"http://"$ha_username":"$ha_encoded_password"@"$ha_proxy":"$ha_port"\", \"http.proxyKerberosServicePrincipal\": \"http://"$ha_username":"$ha_encoded_password"@"$ha_proxy":"$ha_port"\"}" "$ha_vscode" > temp && mv temp "$ha_vscode"
+    akory -d 0.005 "vscode proxy enabled ... [done]"
+    
+    # git
+    git config --global http.proxy "http://"$ha_username":"$ha_encoded_password"@"$ha_proxy":"$ha_port""
+    git config --global https.proxy "http://"$ha_username":"$ha_encoded_password"@"$ha_proxy":"$ha_port""
+    akory -d 0.005 "git proxy enabled ... [done]"
+    
+    # ssh
+    echo "$ha_username":"$ha_password" > "$ha_sshauth"
+    echo -e "
+Host github.com
+HostName ssh.github.com
+Port $ha_ssh_port
+ProxyCommand /usr/bin/corkscrew "$ha_proxy" "$ha_port" %h %p "$ha_sshauth"
+    " > "$ha_sshconfig"
+    akory -d 0.005 "ssh proxy configured ... [done]"
+    
+    # set access
+    ex_access
+}
+
+function ha_stop() {
+    # vscode
+    jq 'del(.["http.proxy"], .["http.proxyKerberosServicePrincipal"])' "$ha_vscode" > temp && mv temp "$ha_vscode"
+    akory -d 0.005 "vscode proxy disabled ... [done]"
+    
+    # git
+    git config --global --unset http.proxy
+    git config --global --unset https.proxy
+    akory -d 0.005 "git proxy disabled ... [done]"
+    
+    # ssh
+    rm -r "$ha_sshconfig" "$ha_sshauth"
+    akory -d 0.005 "ssh proxy deleted ... [done]"
+}
+
+function ha_status() {
+    # vscode
+    if grep -q "http.proxy" "$ha_vscode"; then
+        tail -n 5 "$ha_vscode" | cat && akory -d 0.005 "vscode proxy is enabled !"
+    else
+        akory -d 0.005 "vscode proxy is disabled !"
+    fi
+    
+    # git
+    if grep -q "proxy" "$ha_gitconfig"; then
+        cat "$ha_gitconfig" && akory -d 0.005 "git proxy is enabled !"
+    else
+        akory -d 0.005 "git proxy is disabled !"
+    fi
+    
+    # ssh
+    if [ -e "$ha_sshconfig" ]; then
+        cat "$ha_sshauth" && cat "$ha_sshconfig" && akory -d 0.005 "ssh proxy is configured !"
+    else
+        akory -d 0.005 "no ssh proxy configuration found !"
+    fi
+}
+
+function ha_clip() {
+    # define
+    local ha_proxy="$HA_PROXY"
+    local ha_port="$HA_PORT"
+    local ha_username="$HA_USERNAME"
+    local ha_password="$HA_PASSWORD"
+    
+    # xclip
+    echo "--proxy-server=http://"$ha_username":"$ha_password"@"$ha_proxy":"$ha_port"" | xclip -selection clipboard
+    akory -d 0.005 "proxy server copied to clipboard ... [done]"
+}
+
+function ha_check() {
+    # env check
+    required_variables=("HA_VSCODE" "HA_GITCONFIG" "HA_SSHAUTH" "HA_SSHCONFIG" "HA_ENV" "HA_PROXY" "HA_PORT" "HA_SSH_PORT" "HA_USERNAME" "HA_PASSWORD")
+    for var in "${required_variables[@]}"; do
+        if [ -z "${!var}" ]; then
+            echo "error: $var variable not set in .env file !"
+            exit 1
+        fi
+    done
+    
+    # deps check
+    dependencies=("akory" "xxd" "jq" "git" "xclip" "corkscrew" "gedit")
+    for dep in "${dependencies[@]}"; do
+        if ! command -v "$dep" > /dev/null 2>&1; then
+            echo "error: '$dep' is not installed !"
+            exit 1
+        fi
+    done
+}
+
+function ha_env() {
+    local env_file="$ha_env"
+    if [ -e "$env_file" ]; then
+        gedit "$env_file"
+    else
+        akory -d 0.02 "error: $env_file not found !"
+    fi
+}
+
+function ha_ssh() {
+    akory -d 0.02 "Enter your email address, SSH will use the address as a label for the key ..."
+    read -p "EMAIL > " email
+    ssh-keygen -t rsa -b 4096 -C "$email"
+    akory -d 0.02 "ssh-key (private|public) created ... [done]"
+}
+
+function ha_info() {
+    akory -d 0.002 "
+	* author: $author
+	* description: $description
+	* version: $version
+    "
+}
+
+function ha_help() {
+    echo -e "
+Usage: ha-proxy [OPTIONS]
+
+Options:
+--start           Start automatic proxy configuration for HTTP, Git, VSCode, and SSH.
+--stop            Unset all proxy configuration.
+--status          Display the current status of proxy configuration.
+--restart         Restart proxy configuration (stop and then start).
+--clip            Copy proxy server information to the clipboard.
+--check           Check for required variables and dependencies.
+--env             Set environment variables.
+--ssh             Generate new SSH (private|public) key.
+--version | -v    Display script version information.
+--help    | -h    Display this help message.
+
+Example: ha-proxy --start | ha-proxy -v | ha-proxy --env ...
+    "
+}
+
+# [extras] ===============================
+
+function ex_banner() {
+    akory -d 0.001 "
+  _
+ | |__   __ _       _ __  _ __ _____  ___   _
+ | '_ \ / _  |_____| '_ \| '__/ _ \ \/ / | | |
+ | | | | (_| |_____| |_) | | | (_) >  <| |_| |
+ |_| |_|\__,_|     | .__/|_|  \___/_/\_\\__,  |
+                   |_|                  |___/
+    "
+}
+
+function ex_access() {
+    chmod 600 "$ha_vscode" # default: -rw-r--r-- | $USER:$USER
+    chmod 600 "$ha_gitconfig" # default: -rw-r--r-- | $USER:$USER
+    chmod 600 "$ha_sshauth"
+    chmod 600 "$ha_sshconfig"
+    chmod 600 "$ha_env"
+    akory -d 0.02 "set file access ... [done]"
+}
+
+function ex_urlencode() {
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-])
+                printf "$c"
+            ;;
+            *)
+                printf "$c" | xxd -p -c1 | while read x; do printf "%%%s" "$x"; done
+            ;;
+        esac
+    done
+}
+
+# [args] =================================
+
+function arg-start() {ex_banner && ha_start}
+function arg-stop() {ex_banner && ha_stop}
+function arg-status() {ex_banner && ha_status}
+function arg-restart() {ex_banner && ha_stop && ha_start}
+function arg-clip() {ex_banner && ha_clip}
+function arg-check() {ex_banner && ha_check}
+function arg-env() {ex_banner && ha_env}
+function arg-ssh() {ex_banner && ha_ssh}
+function arg-version() {ex_banner && ha_info}
+function arg-help() {ex_banner && ha_help}
+
+# [main] =================================
+
+function main() {
+    ha_check
+    case "$1" in
+        --start) arg-start ;;
+        --stop) arg-stop ;;
+        --status) arg-status ;;
+        --restart) arg-restart ;;
+        --clip) arg-clip ;;
+        --check) arg-check ;;
+        --env) arg-env ;;
+        --ssh) arg-ssh ;;
+        --version|-v) arg-version ;;
+        --help|-h) arg-help ;;
+        *)
+            akory -d 0.02 "error: invalid option for ha-proxy !"
+            arg-help
+            exit 1
+        ;;
+    esac
+}
+
+main "$@"
