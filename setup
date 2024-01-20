@@ -38,7 +38,7 @@ sudo chmod a+rx ha-proxy
 akory -d 0.02 "set access ... [done]"
 
 # to exact path
-mv .ha_env $HOME
+sudo mv .ha_env /usr/local/bin/
 sudo mv ha-proxy /usr/local/bin/
 akory -d 0.02 "INSTALLATION COMPLETED ! ... [done]"
 
