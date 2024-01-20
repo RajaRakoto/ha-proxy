@@ -29,11 +29,11 @@ function ha_start() {
     
     # check
     if [ -z "$ha_proxy" ] || [ -z "$ha_port" ] || [ -z "$ha_ssh_port" ] || [ -z "$ha_username" ] || [ -z "$ha_password" ] || [ -z "$ha_encoded_password" ]; then
-        akory -d 0.02 "error: some required variables are not set !"
+        akory -d 0.02 "error: some required variables are not set ! ___ 😢"
         exit 1
     fi
     if ! [[ "$ha_port" =~ ^[0-9]+$ ]] || ! [[ $ha_ssh_port =~ ^[0-9]+$ ]]; then
-        akory -d 0.02  "error: port numbers must be valid integers !"
+        akory -d 0.02  "error: port numbers must be valid integers ! ___ 😢"
         exit 1
     fi
     
@@ -71,30 +71,32 @@ function ha_stop() {
     akory -d 0.005 "git proxy disabled ... [done]"
     
     # ssh
-    rm -r "$ha_sshconfig" "$ha_sshauth"
+    if [ -e "$ha_sshconfig" ] || [ -e "$ha_sshauth" ]; then
+        rm -r "$ha_sshconfig" "$ha_sshauth"
+    fi
     akory -d 0.005 "ssh proxy deleted ... [done]"
 }
 
 function ha_status() {
     # vscode
     if grep -q "http.proxy" "$ha_vscode"; then
-        tail -n 5 "$ha_vscode" | cat && akory -d 0.005 "vscode proxy is enabled !"
+        tail -n 5 "$ha_vscode" | bat && akory -d 0.005 "vscode proxy is enabled ! ___ 🗹"
     else
-        akory -d 0.005 "vscode proxy is disabled !"
+        akory -d 0.005 "vscode proxy is disabled ! ___ 😢"
     fi
     
     # git
     if grep -q "proxy" "$ha_gitconfig"; then
-        cat "$ha_gitconfig" && akory -d 0.005 "git proxy is enabled !"
+        bat "$ha_gitconfig" && akory -d 0.005 "git proxy is enabled ! ___ 🗹"
     else
-        akory -d 0.005 "git proxy is disabled !"
+        akory -d 0.005 "git proxy is disabled ! ___ 😢"
     fi
     
     # ssh
     if [ -e "$ha_sshconfig" ]; then
-        cat "$ha_sshauth" && cat "$ha_sshconfig" && akory -d 0.005 "ssh proxy is configured !"
+        bat "$ha_sshauth" && bat "$ha_sshconfig" && akory -d 0.005 "ssh proxy is configured ! ___ 🗹"
     else
-        akory -d 0.005 "no ssh proxy configuration found !"
+        akory -d 0.005 "no ssh proxy configuration found ! ___ 😢"
     fi
 }
 
@@ -115,19 +117,21 @@ function ha_check() {
     required_variables=("HA_VSCODE" "HA_GITCONFIG" "HA_SSHAUTH" "HA_SSHCONFIG" "HA_ENV" "HA_PROXY" "HA_PORT" "HA_SSH_PORT" "HA_USERNAME" "HA_PASSWORD")
     for var in "${required_variables[@]}"; do
         if [ -z "${!var}" ]; then
-            echo "error: $var variable not set in .env file !"
+            echo "error: $var variable not set in .env file ! ___ 😢"
             exit 1
         fi
     done
     
     # deps check
-    dependencies=("akory" "xxd" "jq" "git" "xclip" "corkscrew" "gedit")
+    dependencies=("akory" "xxd" "jq" "git" "xclip" "corkscrew" "gedit" "bat")
     for dep in "${dependencies[@]}"; do
         if ! command -v "$dep" > /dev/null 2>&1; then
-            echo "error: '$dep' is not installed !"
+            echo "error: '$dep' is not installed ! ___ 😢"
             exit 1
         fi
     done
+    
+    akory -d 0.02 "all dependencies and configurations are OK ! ___ 😍"
 }
 
 function ha_env() {
@@ -135,7 +139,7 @@ function ha_env() {
     if [ -e "$env_file" ]; then
         gedit "$env_file"
     else
-        akory -d 0.02 "error: $env_file not found !"
+        akory -d 0.02 "error: $env_file not found ! ___ 😢"
     fi
 }
 
@@ -144,6 +148,27 @@ function ha_ssh() {
     read -p "EMAIL > " email
     ssh-keygen -t rsa -b 4096 -C "$email"
     akory -d 0.02 "ssh-key (private|public) created ... [done]"
+}
+
+function ha_fix() {
+    cd $HOME
+    echo -e "
+# files
+HA_VSCODE="$HOME/.config/Code - Insiders/User/settings.json"
+HA_GITCONFIG="$HOME/.gitconfig"
+HA_SSHAUTH="$HOME/.ssh/auth"
+HA_SSHCONFIG="$HOME/.ssh/config"
+HA_ENV="$HOME/.ha_env"
+
+# config
+HA_PROXY="0.0.0.0"
+HA_PORT=8080
+HA_SSH_PORT=8080
+HA_USERNAME="user"
+HA_PASSWORD="password"
+    " | tee .ha_env > /dev/null
+    akory -d 0.02 "env file fixed in $HOME ... [done]"
+    chmod 600 .ha_env
 }
 
 function ha_info() {
@@ -168,6 +193,7 @@ Options:
 --check           Check for required variables and dependencies.
 --env             Set environment variables.
 --ssh             Generate new SSH (private|public) key.
+--fix             Repair env file by regenerating it again in your home.
 --version | -v    Display script version information.
 --help    | -h    Display this help message.
 
@@ -194,6 +220,11 @@ function ex_access() {
     chmod 600 "$ha_sshauth"
     chmod 600 "$ha_sshconfig"
     chmod 600 "$ha_env"
+    ls -l "$ha_vscode"
+    ls -l "$ha_gitconfig"
+    ls -l "$ha_sshauth"
+    ls -l "$ha_sshconfig"
+    ls -l "$ha_env"
     akory -d 0.02 "set file access ... [done]"
 }
 
@@ -215,7 +246,6 @@ function ex_urlencode() {
 # [main] =================================
 
 function main() {
-    ha_check
     case "$1" in
         --start) ex_banner && ha_start ;;
         --stop) ex_banner && ha_stop ;;
@@ -225,6 +255,7 @@ function main() {
         --check) ex_banner && ha_check ;;
         --env) ex_banner && ha_env ;;
         --ssh) ex_banner && ha_ssh ;;
+        --fix) ex_banner && ha_fix ;;
         --version|-v) ex_banner && ha_info ;;
         --help|-h) ex_banner && ha_help ;;
         *)
