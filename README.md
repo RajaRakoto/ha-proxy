@@ -2,7 +2,7 @@
 
 `HA Proxy Tunneler` alias `ha-proxy` is a script designed to streamline the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode, and SSH. 🖧
 
-**Version: 1.0.0**
+**Version: 1.1.0**
 
 > **Disclaimer:** This documentation is provided for informational purposes only. Use this script responsibly and at your own risk. The author is not responsible for any misuse or damage caused by the script.
 
