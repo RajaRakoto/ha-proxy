@@ -26,7 +26,7 @@ curl https://raw.githubusercontent.com/RajaRakoto/ha-proxy/master/setup > setup 
 ha-proxy --start
 ```
 
-**📜 Stop Proxy configuration**: Unsets all proxy configurations.
+**📜 Stop proxy configuration**: Unsets all proxy configurations.
 
 ```bash
 ha-proxy --stop
@@ -74,7 +74,7 @@ ha-proxy --ssh
 ha-proxy --version
 ```
 
-**📜 Display Help Message**: Displays a help message with usage examples.
+**📜 Display help message**: Displays a help message with usage examples.
 
 ```bash
 ha-proxy --help
