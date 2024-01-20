@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# source "$HOME/.ha_env"
 source .ha_env
 
 # global
 author="Raja Rakotonirina <raja.rakoto7@gmail.com>"
 description="Streamlines the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode and SSH. 🖧"
-version="v1.0.0"
+version="v1.1.2"
 
 # files
 ha_vscode="$HA_VSCODE"
@@ -24,7 +23,6 @@ function ha_start() {
     local ha_ssh_port="$HA_SSH_PORT"
     local ha_username="$HA_USERNAME"
     local ha_password="$HA_PASSWORD"
-    # todo - secure encoded password
     local ha_encoded_password=$(ex_urlencode "$ha_password")
     
     # check
@@ -58,6 +56,9 @@ ProxyCommand /usr/bin/corkscrew "$ha_proxy" "$ha_port" %h %p "$ha_sshauth"
     
     # set access
     ex_access
+    
+    # clear
+    ha_encoded_password="password"
 }
 
 function ha_stop() {
@@ -114,6 +115,11 @@ function ha_clip() {
 
 function ha_check() {
     # env check
+    if [ ! -e "$ha_env" ]; then
+        akory -d 0.005 "error: env file is missing ! ___ 😢"
+        akory -d 0.005 "you can fix it with ha-proxy --fix"
+        exit 1
+    fi
     required_variables=("HA_VSCODE" "HA_GITCONFIG" "HA_SSHAUTH" "HA_SSHCONFIG" "HA_ENV" "HA_PROXY" "HA_PORT" "HA_SSH_PORT" "HA_USERNAME" "HA_PASSWORD")
     for var in "${required_variables[@]}"; do
         if [ -z "${!var}" ]; then
@@ -158,7 +164,7 @@ HA_VSCODE="$HOME/.config/Code - Insiders/User/settings.json"
 HA_GITCONFIG="$HOME/.gitconfig"
 HA_SSHAUTH="$HOME/.ssh/auth"
 HA_SSHCONFIG="$HOME/.ssh/config"
-HA_ENV="$HOME/.ha_env"
+HA_ENV="/usr/local/bin/.ha_env"
 
 # config
 HA_PROXY="0.0.0.0"
@@ -167,8 +173,10 @@ HA_SSH_PORT=8080
 HA_USERNAME="user"
 HA_PASSWORD="password"
     " | tee .ha_env > /dev/null
-    akory -d 0.02 "env file fixed in $HOME ... [done]"
     chmod 600 .ha_env
+    sudo mv .ha_env /usr/local/bin/
+    ex_access
+    akory -d 0.02 "env file fixed in /usr/local/bin ... [done]"
 }
 
 function ha_info() {
@@ -219,7 +227,6 @@ function ex_access() {
     chmod 600 "$ha_gitconfig" # default: -rw-r--r-- | $USER:$USER
     chmod 600 "$ha_sshauth"
     chmod 600 "$ha_sshconfig"
-    chmod 600 "$ha_env"
     ls -l "$ha_vscode"
     ls -l "$ha_gitconfig"
     ls -l "$ha_sshauth"
