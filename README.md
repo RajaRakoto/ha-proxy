@@ -68,6 +68,12 @@ ha-proxy --env
 ha-proxy --ssh
 ```
 
+**📜 Fix env file**: Repair .ha_env file by regenerating it again in your home.
+
+```bash
+ha-proxy --fix
+```
+
 **📜 Display script version**: Display current version of ha-proxy
 
 ```bash
