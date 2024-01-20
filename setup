@@ -21,7 +21,7 @@ HA_VSCODE="$HOME/.config/Code - Insiders/User/settings.json"
 HA_GITCONFIG="$HOME/.gitconfig"
 HA_SSHAUTH="$HOME/.ssh/auth"
 HA_SSHCONFIG="$HOME/.ssh/config"
-HA_ENV="$HOME/.ha_env"
+HA_ENV="/usr/local/bin/.ha_env"
 
 # config
 HA_PROXY="0.0.0.0"
