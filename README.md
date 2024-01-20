@@ -71,13 +71,13 @@ ha-proxy --ssh
 **📜 Display script version**: Display current version of ha-proxy
 
 ```bash
-ha-proxy --version
+ha-proxy --version # or -v
 ```
 
 **📜 Display help message**: Displays a help message with usage examples.
 
 ```bash
-ha-proxy --help
+ha-proxy --help # or -h
 ```
 
 ---
