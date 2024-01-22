@@ -2,7 +2,7 @@
 
 `HA Proxy Tunneler` alias `ha-proxy` is a script designed to streamline the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode, and SSH. 🖧
 
-**Version: 1.1.0**
+**Version: 1.1.3**
 
 > **Disclaimer:** This documentation is provided for informational purposes only. Use this script responsibly and at your own risk. The author is not responsible for any misuse or damage caused by the script.
 
@@ -14,6 +14,12 @@ Run the following command to install ha-proxy in your machine (Linux only):
 
 ```bash
 curl https://raw.githubusercontent.com/RajaRakoto/ha-proxy/master/setup > setup && chmod +x setup && ./setup
+```
+
+To uninstall ha-proxy:
+
+```bash
+sudo rm -r "$HOME/.ha_env" /usr/local/bin/ha-proxy && echo "ha-proxy uninstallation ... [done]"
 ```
 
 ---
