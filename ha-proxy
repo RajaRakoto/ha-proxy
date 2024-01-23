@@ -1,11 +1,15 @@
 #!/bin/bash
 
-source .ha_env
+if [ ! -e "$HOME/.ha_env" ]; then
+    touch "$HOME/.ha_env"
+fi
+
+source "$HOME/.ha_env"
 
 # global
 author="Raja Rakotonirina <raja.rakoto7@gmail.com>"
 description="Streamlines the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode and SSH. 🖧"
-version="v1.1.2"
+version="v1.1.4"
 
 # files
 ha_vscode="$HA_VSCODE"
@@ -59,6 +63,7 @@ ProxyCommand /usr/bin/corkscrew "$ha_proxy" "$ha_port" %h %p "$ha_sshauth"
     akory -d 0.005 "ssh proxy configured ... [done]"
     
     # set access
+    ex_ssh_access
     ex_access
     
     # clear
@@ -83,11 +88,13 @@ function ha_stop() {
     # ssh
     if [ -e "$ha_sshconfig" ] || [ -e "$ha_sshauth" ]; then
         rm -r "$ha_sshconfig" "$ha_sshauth"
+        akory -d 0.005 "ssh proxy deleted ... [done]"
     fi
-    akory -d 0.005 "ssh proxy deleted ... [done]"
 }
 
 function ha_status() {
+    local is_ssh_running=true
+    
     # vscode
     if grep -q "http.proxy" "$ha_vscode"; then
         tail -n 5 "$ha_vscode" | bat && akory -d 0.005 "vscode proxy is enabled ! ___ 🗹"
@@ -106,8 +113,13 @@ function ha_status() {
     if [ -e "$ha_sshconfig" ]; then
         bat "$ha_sshauth" && bat "$ha_sshconfig" && akory -d 0.005 "ssh proxy is configured ! ___ 🗹"
     else
+        is_ssh_running=false
         akory -d 0.005 "no ssh proxy configuration found ! ___ 😢"
     fi
+    
+    # show list
+    if [ "$is_ssh_running" == "true" ]; then ex_ssh_list; fi
+    ex_list
 }
 
 function ha_clip() {
@@ -168,23 +180,21 @@ function ha_fix() {
     cd $HOME
     echo -e "
 # files
-HA_VSCODE="$HOME/.config/Code - Insiders/User/settings.json"
-HA_GITCONFIG="$HOME/.gitconfig"
-HA_SSHAUTH="$HOME/.ssh/auth"
-HA_SSHCONFIG="$HOME/.ssh/config"
-HA_ENV="/usr/local/bin/.ha_env"
+HA_VSCODE=\"$HOME/.config/Code - Insiders/User/settings.json\"
+HA_GITCONFIG=\"$HOME/.gitconfig\"
+HA_SSHAUTH=\"$HOME/.ssh/auth\"
+HA_SSHCONFIG=\"$HOME/.ssh/config\"
+HA_ENV=\"$HOME/.ha_env\"
 
 # config
-HA_PROXY="0.0.0.0"
+HA_PROXY=\"0.0.0.0\"
 HA_PORT=8080
 HA_SSH_PORT=8080
-HA_USERNAME="user"
-HA_PASSWORD="password"
-    " | tee .ha_env > /dev/null
+HA_USERNAME=\"user\"
+HA_PASSWORD=\"password\"
+    " > .ha_env
     chmod 600 .ha_env
-    sudo mv .ha_env /usr/local/bin/
-    ex_access
-    akory -d 0.02 "env file fixed in /usr/local/bin ... [done]"
+    akory -d 0.02 "env file fixed in $HOME ... [done]"
 }
 
 function ha_info() {
@@ -220,7 +230,7 @@ Example: ha-proxy --start | ha-proxy -v | ha-proxy --env ...
 # [extras] ===============================
 
 function ex_banner() {
-    akory -d 0.001 "
+    akory -d 0.0005 "
   _
  | |__   __ _       _ __  _ __ _____  ___   _
  | '_ \ / _  |_____| '_ \| '__/ _ \ \/ / | | |
@@ -230,16 +240,26 @@ function ex_banner() {
     "
 }
 
+function ex_ssh_list() {
+    ls -l "$ha_sshauth"
+    ls -l "$ha_sshconfig"
+}
+
+function ex_list() {
+    ls -l "$ha_vscode"
+    ls -l "$ha_gitconfig"
+    ls -l "$ha_env"
+}
+
+function ex_ssh_access() {
+    chmod 600 "$ha_sshauth"
+    chmod 600 "$ha_sshconfig"
+}
+
 function ex_access() {
     chmod 600 "$ha_vscode" # default: -rw-r--r-- | $USER:$USER
     chmod 600 "$ha_gitconfig" # default: -rw-r--r-- | $USER:$USER
-    chmod 600 "$ha_sshauth"
-    chmod 600 "$ha_sshconfig"
-    ls -l "$ha_vscode"
-    ls -l "$ha_gitconfig"
-    ls -l "$ha_sshauth"
-    ls -l "$ha_sshconfig"
-    ls -l "$ha_env"
+    chmod 600 "$ha_env"
     akory -d 0.02 "set file access ... [done]"
 }
 
