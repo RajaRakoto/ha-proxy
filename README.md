@@ -30,6 +30,9 @@ sudo rm -r "$HOME/.ha_env" /usr/local/bin/ha-proxy && echo "ha-proxy uninstallat
 
 ## 📌 Features
 
+```bash
+## 📌 Features
+
 **📜 Start proxy configuration**: Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
 
 ```bash
@@ -54,10 +57,28 @@ ha-proxy --status
 ha-proxy --restart
 ```
 
-**📜 Copy proxy information**: Copies proxy server information to the clipboard.
+**📜 Copy proxy information**: Copies proxy information to the clipboard.
 
 ```bash
-ha-proxy --clip
+ha-proxy --getProxy
+```
+
+**📜 Copy encoded proxy information**: Copies encoded proxy information to the clipboard.
+
+```bash
+ha-proxy --getProxyEncoded
+```
+
+**📜 Copy proxy server information**: Copies proxy server information to the clipboard.
+
+```bash
+ha-proxy --getProxyServer
+```
+
+**📜 Copy encoded proxy server information**: Copies encoded proxy server information to the clipboard.
+
+```bash
+ha-proxy --getProxyServerEncoded
 ```
 
 **📜 Check script**: Checks for required variables and dependencies.
@@ -84,7 +105,7 @@ ha-proxy --ssh
 ha-proxy --fix
 ```
 
-**📜 Display script version**: Display current version of ha-proxy
+**📜 Display script version**: Display the current version of ha-proxy.
 
 ```bash
 ha-proxy --version # or -v
