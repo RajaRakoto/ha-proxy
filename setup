@@ -45,3 +45,6 @@ akory -d 0.02 "INSTALLATION COMPLETED ! ... [done]"
 # test
 sleep 1
 ha-proxy --version
+
+# clear
+rm -rf setup
