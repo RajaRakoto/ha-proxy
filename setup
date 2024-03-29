@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo -e "\n+++ HA-PROXY INSTALLATION +++"
+
 # deps check
 dependencies=("akory" "xxd" "jq" "git" "xclip" "corkscrew" "gedit" "bat")
 for dep in "${dependencies[@]}"; do
