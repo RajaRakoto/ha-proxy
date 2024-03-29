@@ -1,18 +1,19 @@
-# HA Proxy Tunneler
+# ha-proxy 🖧
 
-[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-git.svg)](https://forthebadge.com) [![forthebadge](https://github.com/RajaRakoto/github-docs/blob/master/badge/build-by.svg?raw=true)](https://forthebadge.com) 
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-git.svg)](https://forthebadge.com) [![forthebadge](https://github.com/RajaRakoto/github-docs/blob/master/badge/build-by.svg?raw=true)](https://forthebadge.com)
 
 ![Git](https://img.shields.io/badge/-Git-777?style=flat&logo=git&logoColor=F05032&labelColor=ffffff) ![Gitub](https://img.shields.io/badge/-Gitub-777?style=flat&logo=github&logoColor=777&labelColor=ffffff)
 
-`HA Proxy Tunneler` alias `ha-proxy` is a script designed to streamline the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode, and SSH. 🖧
+**Ha proxy** is a script designed to streamline the configuration and management of proxy tunnels, leveraging HA Tunnel Plus for services like HTTP, Git, VSCode, and SSH.
 
-**Version: 1.1.5**
+- Make sure to set the required environment variables in the `$HOME/.ha_env` file.
+- Ensure that the necessary dependencies `akory`, `xxd`, `jq`, `git`, `xclip`, `corkscrew`, `gedit` and `bat` are installed.
 
-> **Disclaimer:** This documentation is provided for informational purposes only. Use this script responsibly and at your own risk. The author is not responsible for any misuse or damage caused by the script.
+> **Disclaimer:** This is provided for informational purposes only. Use this script responsibly and at your own risk. The author is not responsible for any misuse or damage caused.
 
 ---
 
-## 📌 Install
+## 📌 Usage
 
 Run the following command to install ha-proxy in your machine (Linux only):
 
@@ -23,14 +24,11 @@ curl https://raw.githubusercontent.com/RajaRakoto/ha-proxy/master/setup > setup 
 To uninstall ha-proxy:
 
 ```bash
-sudo rm -r "$HOME/.ha_env" /usr/local/bin/ha-proxy && echo "ha-proxy uninstallation ... [done]"
+sudo rm -r "$HOME/.ha_env" /usr/local/bin/ha-proxy
 ```
 
 ---
 
-## 📌 Features
-
-```bash
 ## 📌 Features
 
 **📜 Start proxy configuration**: Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
@@ -116,10 +114,3 @@ ha-proxy --version # or -v
 ```bash
 ha-proxy --help # or -h
 ```
-
----
-
-## 📌 Notes
-
-- Make sure to set the required environment variables in the `$HOME/.ha_env` file.
-- Ensure that the necessary dependencies `akory`, `xxd`, `jq`, `git`, `xclip`, `corkscrew`, `gedit` and `bat` are installed.
