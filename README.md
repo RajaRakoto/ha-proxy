@@ -13,7 +13,7 @@
 
 ---
 
-## 📌 Usage
+### 📌 Usage
 
 Run the following command to install ha-proxy in your machine (Linux only):
 
@@ -29,7 +29,7 @@ sudo rm -r "$HOME/.ha_env" /usr/local/bin/ha-proxy
 
 ---
 
-## 📌 Features
+### 📌 Features
 
 **📜 Start proxy configuration**: Starts automatic proxy configuration for HTTP, Git, VSCode, and SSH.
 
