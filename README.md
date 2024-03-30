@@ -15,13 +15,13 @@
 
 ### 📌 Usage
 
-Run the following command to install ha-proxy in your machine (Linux only):
+Run the following command to install ha-proxy (Linux only):
 
 ```bash
 curl https://raw.githubusercontent.com/RajaRakoto/ha-proxy/master/setup > setup && chmod +x setup && ./setup
 ```
 
-To uninstall ha-proxy:
+Uninstall ha-proxy (Linux only):
 
 ```bash
 sudo rm -r "$HOME/.ha_env" /usr/local/bin/ha-proxy
